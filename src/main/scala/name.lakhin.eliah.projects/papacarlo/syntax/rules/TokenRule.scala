@@ -22,33 +22,6 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class TokenRule(kind: String,
                            matchUntil: Boolean = false) extends Rule {
-  override def apply(session: Session) = {
-    session.syntax.onRuleEnter.trigger(this, session.state)
-
-    var index = session.state.virtualPosition
-
-    if (matchUntil) {
-      while (session.tokens.lift(index).exists(_.kind != kind)) index += 1
-    }
-
-    val actualKind = session.tokens
-      .lift(index).map(_.kind).getOrElse(TokenRule.EndOfFragmentKind)
-
-    val result = if (actualKind == kind) {
-      session.state = session.state.copy(virtualPosition = index + 1)
-      Successful
-    } else {
-      session.state = session.state.issue(
-        Bounds(session.state.virtualPosition, index + 1),
-        kind + " expected, but " + actualKind  + " found"
-      )
-      Failed
-    }
-
-    session.syntax.onRuleLeave.trigger(this, session.state, result)
-    result
-  }
-
   override val show = {
     val terminal = !kind.toLowerCase.forall(char => 'a' <= char && char <= 'z')
     (if (terminal) "'" + kind + "'" else kind) +

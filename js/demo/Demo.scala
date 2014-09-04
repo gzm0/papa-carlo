@@ -132,7 +132,7 @@ object Demo {
       "values" -> mapToObject(node.getValues
         .map {
           case (key, values) =>
-            key -> toJsArray(values.map(s => s: js.String))
+            key -> toJsArray(values.map(s => s: js.Any))
         }
       )
     )

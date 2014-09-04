@@ -102,7 +102,7 @@ final class Lexer(tokenizer: Tokenizer,
       tokens.descriptions.take(index).foldLeft(0)((offset, token) =>
         offset + token.value.length))
     val oldCode = codeBounds.substring(this.code)
-    val targetCode = range.shift(-codeBounds.from).replace(oldCode, code)
+    val targetCode = range.shift(-codeBounds.from).replace(oldCode, code) + "foo"
     val targetTokens = new ListBuffer[Token]
 
     for (line <- targetCode.split("\n", -1)) {

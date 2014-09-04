@@ -23,7 +23,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 final case class ReferentialRule(name: String, tag: Option[String] = None)
   extends Rule {
 
-  def apply(session: Session) = {
+  override def apply(session: Session) = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     val packratKey =

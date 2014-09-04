@@ -20,7 +20,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class RequiredRule(rule: Rule) extends Rule {
-  def apply(session: Session): Int = {
+  override def apply(session: Session): Int = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     val initialPosition = session.state.virtualPosition

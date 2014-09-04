@@ -23,7 +23,7 @@ final case class RepetitionRule(element: Rule,
                                 separator: Option[Rule] = None,
                                 min: Option[Int] = None,
                                 max: Option[Int] = None) extends Rule {
-  def apply(session: Session): Int = {
+  override def apply(session: Session): Int = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     val min = this.min.getOrElse(0)

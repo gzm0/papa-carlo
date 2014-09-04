@@ -19,7 +19,7 @@ package papacarlo.syntax
 import name.lakhin.eliah.projects.papacarlo.syntax.rules._
 
 abstract class Rule {
-  def apply(session: Session): Int
+  def apply(session: Session): Int = ???
 
   def show: (String, Int)
 

@@ -23,7 +23,7 @@ import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 final case class NamedRule(label: String,
                            rule: Rule,
                            trace: Boolean = false) extends Rule {
-  def apply(session: Session) = {
+  override def apply(session: Session) = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     val initialState = session.state

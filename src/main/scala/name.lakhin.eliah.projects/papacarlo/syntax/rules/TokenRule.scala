@@ -22,7 +22,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class TokenRule(kind: String,
                            matchUntil: Boolean = false) extends Rule {
-  def apply(session: Session) = {
+  override def apply(session: Session) = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     var index = session.state.virtualPosition

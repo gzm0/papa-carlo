@@ -21,7 +21,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Rule, Session}
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class CapturingRule(tag: String, rule: Rule) extends Rule {
-  def apply(session: Session) = {
+  override def apply(session: Session) = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     val initialState = session.state

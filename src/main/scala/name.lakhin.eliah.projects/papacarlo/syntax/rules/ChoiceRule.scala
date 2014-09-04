@@ -20,7 +20,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Rule, Session}
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class ChoiceRule(choices: List[Rule]) extends Rule {
-  def apply(session: Session): Int = {
+  override def apply(session: Session): Int = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     val initialState = session.state

@@ -111,7 +111,7 @@ final case class ExpressionRule(tag: String, atom: Rule) extends Rule {
 
   private var parselets = Map.empty[String, Parselet]
 
-  def apply(session: Session) = {
+  override def apply(session: Session) = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     val state = new ExpressionState(session)

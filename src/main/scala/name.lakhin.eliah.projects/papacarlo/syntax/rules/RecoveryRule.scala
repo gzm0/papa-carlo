@@ -25,7 +25,7 @@ final case class RecoveryRule(rule: Rule,
                               branch: Option[String] = None)
   extends Rule {
 
-  def apply(session: Session) = {
+  override def apply(session: Session) = {
     session.syntax.onRuleEnter.trigger(this, session.state)
 
     val initialState = session.state

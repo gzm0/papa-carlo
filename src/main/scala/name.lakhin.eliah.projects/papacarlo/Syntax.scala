@@ -60,7 +60,7 @@ final class Syntax(val lexer: Lexer) {
       this
     }
 
-    def reference = NamedRule(name, ReferentialRule(name))
+    @inline def reference: NamedRule = NamedRule(name, ReferentialRule(name))
 
     def apply(body: => Rule) = {
       constructor match {

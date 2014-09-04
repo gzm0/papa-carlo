@@ -19,6 +19,7 @@ package papacarlo.syntax
 import name.lakhin.eliah.projects.papacarlo.lexis.TokenReference
 import name.lakhin.eliah.projects.papacarlo.utils.Bounds
 
+@inline
 final case class Error(from: TokenReference,
                        to: TokenReference,
                        description: String,

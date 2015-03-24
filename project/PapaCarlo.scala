@@ -15,9 +15,8 @@
 */
 import sbt._
 import Keys._
-import com.typesafe.sbt._
-import scala.scalajs.sbtplugin.ScalaJSPlugin._
-import ScalaJSKeys._
+import org.scalajs.sbtplugin.ScalaJSPlugin
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 
 object PapaCarlo extends Build {
   val papaCarloVersion = "0.7.0"
@@ -27,8 +26,6 @@ object PapaCarlo extends Build {
     version := papaCarloVersion,
 
     scalacOptions += "-unchecked",
-
-    sourceDirectory := (sourceDirectory in PapaCarlo).value,
 
     description :=
       "Constructor of incremental parsers in Scala using PEG grammars",
@@ -41,77 +38,70 @@ object PapaCarlo extends Build {
       new URL("http://www.apache.org/licenses/LICENSE-2.0.txt")),
     startYear := Some(2013),
 
-    scalaVersion := "2.11.1",
+    scalaVersion := "2.11.6",
 
-    crossScalaVersions := Seq("2.10.4", "2.11.1")
+    crossScalaVersions := Seq("2.10.4", "2.11.6")
   )
-
-  val jsSettings = Defaults.defaultSettings ++ baseSettings ++
-    scalaJSSettings ++ Seq(
-      libraryDependencies += "org.scala-lang.modules.scalajs" %%
-        "scalajs-jasmine-test-framework" % scalaJSVersion % "test",
-
-      sourceDirectory := (sourceDirectory in PapaCarlo).value,
-
-      excludeFilter in unmanagedSources := "test"
-    )
 
   lazy val PapaCarlo: sbt.Project = Project(
     id = "root",
     base = file(".")
-  ).aggregate(JVM, JSDemo)
+  ).aggregate(jvm, `js-demo`)
 
-  lazy val JVM = Project(
-    id = "jvm",
-    base = file("./jvm/"),
-    settings = Defaults.defaultSettings ++ SbtPgp.settings ++ baseSettings ++
-      Seq(
-        libraryDependencies ++= Seq(
-          "org.scalatest" %% "scalatest" % "2.2.0",
-          "net.liftweb" %% "lift-json" % "2.6-M4"
-        ),
-        resolvers ++= Seq(
-          "sonatype" at "http://oss.sonatype.org/content/repositories/releases",
-          "typesafe" at "http://repo.typesafe.com/typesafe/releases/"
-        ),
+  lazy val jvm = project.in(file("./jvm/")).
+    settings(baseSettings: _*).
+    settings(
+      unmanagedSourceDirectories in Compile +=
+        baseDirectory.value.getParentFile / "src" / "main" / "scala",
 
-        testOptions in Test += Tests.Argument("-oD"),
+      libraryDependencies ++= Seq(
+        "org.scalatest" %% "scalatest" % "2.2.0",
+        "net.liftweb" %% "lift-json" % "2.6-M4"
+      ),
+      resolvers ++= Seq(
+        "sonatype" at "http://oss.sonatype.org/content/repositories/releases",
+        "typesafe" at "http://repo.typesafe.com/typesafe/releases/"
+      ),
 
-        publishMavenStyle := true,
-        pomIncludeRepository := { _ => false },
-        SbtPgp.useGpg := true,
-        credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-        publishArtifact in Test := false,
-        publishTo <<= version {
-          version =>
-            val nexus = "https://oss.sonatype.org/"
-            if (version.endsWith("SNAPSHOT"))
-              Some("snapshots" at nexus + "content/repositories/snapshots")
-            else
-              Some("releases" at nexus + "service/local/staging/deploy/maven2")
-        },
-        pomExtra :=
-          <scm>
-            <url>git@github.com:Eliah-Lakhin/papa-carlo.git</url>
-            <connection>scm:git:git@github.com:Eliah-Lakhin/papa-carlo.git</connection>
-          </scm>
-          <developers>
-            <developer>
-              <id>Eliah-Lakhin</id>
-              <name>Ilya Lakhin</name>
-              <email>eliah.lakhin@gmail.com</email>
-              <url>http://lakhin.com/</url>
-            </developer>
-          </developers>
-      )
-  )
+      testOptions in Test += Tests.Argument("-oD"),
 
-  lazy val JSDemo = Project(
-    id = "js-demo",
-    base = file("./js/demo/"),
-    settings = jsSettings/* ++ Seq(
-      unmanagedSources in (Compile, ScalaJSKeys.packageJS) +=
-        (baseDirectory in PapaCarlo).value / "js" / "demo" / "Demo.js"
-    )                      */
-  )
+      publishMavenStyle := true,
+      pomIncludeRepository := { _ => false },
+      credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
+      publishArtifact in Test := false,
+      publishTo <<= version {
+        version =>
+          val nexus = "https://oss.sonatype.org/"
+          if (version.endsWith("SNAPSHOT"))
+            Some("snapshots" at nexus + "content/repositories/snapshots")
+          else
+            Some("releases" at nexus + "service/local/staging/deploy/maven2")
+      },
+      pomExtra :=
+        <scm>
+          <url>git@github.com:Eliah-Lakhin/papa-carlo.git</url>
+          <connection>scm:git:git@github.com:Eliah-Lakhin/papa-carlo.git</connection>
+        </scm>
+        <developers>
+          <developer>
+            <id>Eliah-Lakhin</id>
+            <name>Ilya Lakhin</name>
+            <email>eliah.lakhin@gmail.com</email>
+            <url>http://lakhin.com/</url>
+          </developer>
+        </developers>
+    )
+
+  lazy val `js-demo` = project.in(file("./js/demo/")).
+    enablePlugins(ScalaJSPlugin).
+    settings(baseSettings: _*).
+    settings(
+      //libraryDependencies += "org.scala-lang.modules.scalajs" %%
+      //  "scalajs-jasmine-test-framework" % scalaJSVersion % "test",
+
+      unmanagedSourceDirectories in Compile +=
+        baseDirectory.value.getParentFile.getParentFile / "src" / "main" / "scala",
+
+      excludeFilter in unmanagedSources := "test"
+    )
 }

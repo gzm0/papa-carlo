@@ -20,27 +20,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class SequentialRule(steps: List[Rule]) extends Rule {
-  override def apply(session: Session): Int = {
-    session.syntax.onRuleEnter.trigger(this, session.state)
-
-    var result = Successful
-    val initialState = session.state
-
-    for (step <- steps)
-      step(session) match {
-        case Failed =>
-          session.state = initialState.copy(issues = session.state.issues)
-          session.syntax.onRuleLeave.trigger(this, session.state, Failed)
-          return Failed
-
-        case Recoverable => result = Recoverable
-
-        case _ =>
-      }
-
-    session.syntax.onRuleLeave.trigger(this, session.state, result)
-    result
-  }
+  override def apply(session: Session): Int = ???
 
   override val show = steps.map(_.showOperand(3)).mkString(" & ") -> 3
 

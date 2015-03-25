@@ -20,7 +20,7 @@ import name.lakhin.eliah.projects.papacarlo.syntax.{Session, Rule}
 import name.lakhin.eliah.projects.papacarlo.syntax.Result._
 
 final case class SequentialRule(steps: List[Rule]) extends Rule {
-  override def apply(session: Session): Int = ???
+  //override def apply(session: Session): Int = ???
 
   override val show = steps.map(_.showOperand(3)).mkString(" & ") -> 3
 
